@@ -1,6 +1,4 @@
-
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { GoogleGenAI, Chat } from "@google/genai";
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Theatre as TheatreType, ChatMessage as ChatMessageType } from './types';
 import TheatreCard from './components/TheatreCard';
 import ChatIcon from './components/ChatIcon';
@@ -23,7 +21,7 @@ const theatres: TheatreType[] = [
     { id: 12, name: 'Rex Theatre', location: 'Bengaluru', keyPoints: ['Classic cinema hall on Brigade Road', 'Recently renovated with modern tech', 'Shows a mix of Hollywood and Bollywood'], imageUrl: 'https://picsum.photos/seed/rex/600/400' },
     { id: 13, name: 'Cauvery Theatre', location: 'Bengaluru', keyPoints: ['Famous for Kannada film premieres', 'Large seating capacity', 'Beloved by local film fans'], imageUrl: 'https://picsum.photos/seed/cauvery/600/400' },
     { id: 14, name: 'Shankar Nag Chitramandira', location: 'Bengaluru', keyPoints: ['Named after the famous actor/director', 'Promotes experimental cinema', 'A tribute to a cinema legend'], imageUrl: 'https://picsum.photos/seed/shankarnag/600/400' },
-    { id: 15, name: 'Natana School of Theatre Arts', location: 'Mysuru', keyPoints: ['Focuses on children\'s theatre', 'Conducts workshops and training', 'Innovative and educational performances'], imageUrl: 'https://picsum.photos/seed/natana/600/400' },
+    { id: 15, name: 'Natana School of Theatre Arts', location: 'Mysuru', keyPoints: ["Focuses on children's theatre", 'Conducts workshops and training', 'Innovative and educational performances'], imageUrl: 'https://picsum.photos/seed/natana/600/400' },
     { id: 16, name: 'KH Kalasoudha', location: 'Bengaluru', keyPoints: ['Amphitheatre-style seating', 'Hosts a variety of art forms', 'Managed by artists, for artists'], imageUrl: 'https://picsum.photos/seed/kalasoudha/600/400' },
     { id: 17, name: 'Prabhat Kalapoornima', location: 'Bengaluru', keyPoints: ['A classic cinema experience', 'Well-maintained single screen', 'Shows regional and national films'], imageUrl: 'https://picsum.photos/seed/prabhat/600/400' },
     { id: 18, name: 'Kinnara Mela', location: 'Tumari', keyPoints: ['Unique theatre in a rural setting', 'Focuses on folk and experimental forms', 'Residential theatre group'], imageUrl: 'https://picsum.photos/seed/kinnara/600/400' },
@@ -31,119 +29,78 @@ const theatres: TheatreType[] = [
     { id: 20, name: 'Neenasam', location: 'Heggodu', keyPoints: ['Influential theatre institute and repertory', 'Known for serious, artistic theatre', 'Hosts an annual culture course'], imageUrl: 'https://picsum.photos/seed/neenasam/600/400' },
 ];
 
-
-const TheatreGuideScreen = ({ onChatClick }: { onChatClick: () => void }) => {
-    return (
-        <div className="min-h-screen bg-slate-900">
-            <main className="container mx-auto px-4 py-8">
-                <header className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
-                        Karnataka Theatre & Cinema Guide
-                    </h1>
-                    <p className="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
-                        Explore the rich cultural landscape of Karnataka's most celebrated performance venues.
-                    </p>
-                </header>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {theatres.map((theatre) => (
-                        <TheatreCard key={theatre.id} theatre={theatre} />
-                    ))}
-                </div>
-            </main>
-            <ChatIcon onClick={onChatClick} />
-        </div>
-    );
-};
+const TheatreGuideScreen = ({ onChatClick }: { onChatClick: () => void }) => (
+    <div className="min-h-screen bg-slate-900">
+        <main className="container mx-auto px-4 py-8">
+            <header className="text-center mb-12">
+                <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">Karnataka Theatre & Cinema Guide</h1>
+                <p className="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
+                    Explore the rich cultural landscape of Karnataka's most celebrated performance venues.
+                </p>
+            </header>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {theatres.map((theatre) => <TheatreCard key={theatre.id} theatre={theatre} />)}
+            </div>
+        </main>
+        <ChatIcon onClick={onChatClick} />
+    </div>
+);
 
 const ChatbotScreen = ({ onBackClick }: { onBackClick: () => void }) => {
-    const [chat, setChat] = useState<Chat | null>(null);
-    const [messages, setMessages] = useState<ChatMessageType[]>([]);
+    const [messages, setMessages] = useState<ChatMessageType[]>([{
+        id: 'init',
+        role: 'model',
+        text: "Hello! I'm your guide to Karnataka's theatres. Ask me about venues, theatre history, or how to find current show information."
+    }]);
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    useEffect(scrollToBottom, [messages]);
-
     useEffect(() => {
-        try {
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
-            const chatInstance = ai.chats.create({
-                model: 'gemini-2.5-flash',
-                config: {
-                    systemInstruction: "You are an expert on theatre and cinema culture in Karnataka, India. Your knowledge includes details about famous theatres, their history, locations, and the types of plays and films they show. You should provide informative and engaging answers. When asked about recent or current shows, use your search tool to find the most up-to-date information. Your tone should be helpful and enthusiastic.",
-                    tools: [{ googleSearch: {} }]
-                },
-            });
-            setChat(chatInstance);
-            setMessages([{
-                id: 'init',
-                role: 'model',
-                text: "Hello! I'm your guide to Karnataka's theatres. Ask me anything about showtimes, history, or famous venues!"
-            }]);
-        } catch (error) {
-            console.error("Failed to initialize Gemini AI:", error);
-             setMessages([{
-                id: 'error-init',
-                role: 'model',
-                text: "Sorry, I couldn't connect to my knowledge base. Please check the API key configuration."
-            }]);
-        }
-    }, []);
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
 
     const handleSendMessage = useCallback(async (messageText: string) => {
-        if (!chat) return;
-
-        setIsLoading(true);
         const userMessage: ChatMessageType = {
             id: Date.now().toString(),
             role: 'user',
             text: messageText,
         };
-        
-        setMessages(prev => [...prev, userMessage]);
+        const history = messages
+            .filter((message) => message.id !== 'init')
+            .slice(-10)
+            .map(({ role, text }) => ({ role, text }));
 
+        setMessages((previous) => [...previous, userMessage]);
+        setIsLoading(true);
         const modelMessageId = (Date.now() + 1).toString();
-        // Add a placeholder for the model's response
-        setMessages(prev => [...prev, { id: modelMessageId, role: 'model', text: '...' }]);
+        setMessages((previous) => [...previous, { id: modelMessageId, role: 'model', text: '...' }]);
 
         try {
-            const result = await chat.sendMessageStream({ message: messageText });
-            
-            let fullResponse = "";
-            for await (const chunk of result) {
-                fullResponse += chunk.text;
-                setMessages(prev => prev.map(msg => 
-                    msg.id === modelMessageId ? { ...msg, text: fullResponse + '...' } : msg
-                ));
-            }
-
-            setMessages(prev => prev.map(msg => 
-                msg.id === modelMessageId ? { ...msg, text: fullResponse } : msg
+            const response = await fetch('/api/theatre-chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: messageText, history }),
+                signal: AbortSignal.timeout(45_000),
+            });
+            const result = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(typeof result.error === 'string' ? result.error : 'Chat service unavailable.');
+            const answer = typeof result.answer === 'string' ? result.answer : 'No response was returned.';
+            setMessages((previous) => previous.map((item) =>
+                item.id === modelMessageId ? { ...item, text: answer } : item
             ));
-        } catch (error) {
-            console.error("Error sending message:", error);
-            const errorMessage = "I'm having trouble connecting right now. Please try again in a moment.";
-             setMessages(prev => prev.map(msg => 
-                msg.id === modelMessageId ? { ...msg, text: errorMessage } : msg
+        } catch {
+            setMessages((previous) => previous.map((item) =>
+                item.id === modelMessageId ? { ...item, text: "I'm having trouble connecting right now. Please try again in a moment." } : item
             ));
         } finally {
             setIsLoading(false);
         }
-    }, [chat]);
-
+    }, [messages]);
 
     return (
         <div className="h-screen w-full flex flex-col bg-slate-800">
             <header className="flex items-center p-4 bg-slate-900/70 backdrop-blur-sm shadow-md z-10">
-                <button
-                    onClick={onBackClick}
-                    className="p-2 rounded-full hover:bg-slate-700 transition-colors"
-                    aria-label="Go back"
-                >
+                <button onClick={onBackClick} className="p-2 rounded-full hover:bg-slate-700 transition-colors" aria-label="Go back">
                     <ArrowLeftIcon className="h-6 w-6 text-white" />
                 </button>
                 <div className="ml-4">
@@ -153,12 +110,7 @@ const ChatbotScreen = ({ onBackClick }: { onBackClick: () => void }) => {
             </header>
             <main className="flex-grow overflow-y-auto p-6">
                 <div className="space-y-6">
-                    {messages.map((msg) => (
-                        <ChatMessage key={msg.id} message={msg} />
-                    ))}
-                    {isLoading && messages[messages.length-1].role === 'user' && (
-                        <ChatMessage key="loading" message={{id: 'loading', role: 'model', text: '...'}} />
-                    )}
+                    {messages.map((message) => <ChatMessage key={message.id} message={message} />)}
                     <div ref={messagesEndRef} />
                 </div>
             </main>
@@ -169,14 +121,9 @@ const ChatbotScreen = ({ onBackClick }: { onBackClick: () => void }) => {
     );
 };
 
-
 const App: React.FC = () => {
     const [screen, setScreen] = useState<'guide' | 'chatbot'>('guide');
-
-    if (screen === 'chatbot') {
-        return <ChatbotScreen onBackClick={() => setScreen('guide')} />;
-    }
-
+    if (screen === 'chatbot') return <ChatbotScreen onBackClick={() => setScreen('guide')} />;
     return <TheatreGuideScreen onChatClick={() => setScreen('chatbot')} />;
 };
 
