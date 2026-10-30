@@ -1,51 +1,60 @@
-# Karnataka Theatre Guide
+# Karnataka Theatre & Cinema Guide
 
-An interactive web project for exploring theatre and cinema information across Karnataka. The project combines a React interface with a conversational experience to make local entertainment information easier to explore.
+A React and TypeScript web application showcasing a curated list of theatre and cinema venues in Karnataka, with an interactive Gemini-powered chat interface.
 
-## Project goals
+## What is included
 
-- Help users discover theatre and cinema-related information in Karnataka.
-- Present venue and destination information through a web interface.
-- Provide an interactive conversational guide.
-- Make the information easy to browse.
+- A browsable venue-card interface.
+- A curated, hard-coded list of 20 venues and their short descriptions.
+- Venue locations and illustrative image URLs.
+- A chat screen powered by the Google GenAI SDK.
+- A Vite development and production build setup.
+
+**Accuracy note:** The venue information is static project data, not a verified live directory. The app does not currently provide a maintained showtime/ticket inventory. Treat venue details, descriptions, and availability as informational examples and verify them with the venue before travelling or booking.
 
 ## Technology
 
 - React 19
 - TypeScript
-- Vite
-- HTML and CSS
-- Google GenAI integration (as configured in the application)
+- Vite 6
+- Google GenAI SDK
+- Tailwind utility classes loaded from the Tailwind CDN in `index.html`
 
 ## Run locally
 
-### Prerequisites
-
-- Node.js and npm
-
-### Setup
+**Prerequisites:** Node.js and npm.
 
 ```bash
 git clone https://github.com/harshith29122004-lgtm/harshith-ds.git
 cd harshith-ds
 npm install
+```
+
+Create a local `.env.local` file in the project root:
+
+```dotenv
+GEMINI_API_KEY=your_api_key
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-Open the local development URL printed by Vite in your terminal.
-
-## Configuration
-
-The application source references an API key through `process.env.API_KEY`. Configure the required Google GenAI key using the environment/configuration approach expected by this project's Vite setup. **Do not commit API keys or other secrets** to the repository.
-
-## Build
+Open the local URL printed by Vite. To create a production build:
 
 ```bash
 npm run build
+npm run preview
 ```
+
+## API key security
+
+The current Vite configuration injects `GEMINI_API_KEY` into client-side JavaScript as `process.env.API_KEY`. Any key included in a browser build can be inspected by users. Use only a restricted development key for local testing; do not publish a private key in a public deployment. A production implementation should route Gemini requests through a protected server-side endpoint.
+
+Never commit `.env.local` or other files containing credentials.
 
 ## Repository
 
-[View the source code](https://github.com/harshith29122004-lgtm/harshith-ds)
-
----
+[View source code](https://github.com/harshith29122004-lgtm/harshith-ds)
