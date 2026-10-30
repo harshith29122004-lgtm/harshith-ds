@@ -1,136 +1,51 @@
-<h1 align="center">🏛️ Karnataka Theatre Guide</h1>
+# Karnataka Theatre Guide
 
-<h3 align="center">Your Smart Chatbot Guide to Exploring Karnataka</h3>
+An interactive web project for exploring theatre and cinema information across Karnataka. The project combines a React interface with a conversational experience to make local entertainment information easier to explore.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Project-Internship-blue" />
-  <img src="https://img.shields.io/badge/React-TypeScript-blue?logo=react" />
-  <img src="https://img.shields.io/badge/Vite-Fast%20Build-purple?logo=vite" />
-  <img src="https://img.shields.io/badge/Status-Completed-success" />
-</p>
+## Project goals
 
----
+- Help users discover theatre and cinema-related information in Karnataka.
+- Present venue and destination information through a web interface.
+- Provide an interactive conversational guide.
+- Make the information easy to browse.
 
-## 📌 About the Project
+## Technology
 
-**Karnataka Theatre Guide** is an interactive chatbot project developed as part of an internship.
+- React 19
+- TypeScript
+- Vite
+- HTML and CSS
+- Google GenAI integration (as configured in the application)
 
-The main objective of this project is to help users explore Karnataka's famous tourist destinations, historical monuments, cultural attractions, and popular places through a chatbot interface.
+## Run locally
 
-The chatbot provides an interactive way for users to discover information about Karnataka and makes exploring popular destinations easier and more convenient.
+### Prerequisites
 
----
+- Node.js and npm
 
-## 🎯 Project Objectives
-
-* Provide information about famous places in Karnataka.
-* Help users discover popular tourist destinations.
-* Create an interactive chatbot experience.
-* Make information about Karnataka's attractions easily accessible.
-* Improve user interaction through a conversational interface.
-
----
-
-## ✨ Key Features
-
-* 🤖 Interactive chatbot interface.
-* 🏛️ Information about famous places in Karnataka.
-* 🗺️ Discover popular tourist destinations.
-* 🎨 User-friendly interface.
-* 💬 Conversational interaction with users.
-* 🌐 Web-based application.
-
----
-
-## 🛠️ Technologies Used
-
-| Technology | Purpose                      |
-| ---------- | ---------------------------- |
-| React.js   | Frontend development         |
-| TypeScript | Programming language         |
-| Vite       | Development and build tool   |
-| HTML       | Application structure        |
-| CSS        | Styling and interface design |
-
----
-
-## 📂 Project Structure
-
-```text
-Karnataka-Theatre-Guide/
-│
-├── components/
-│
-├── App.tsx
-├── index.tsx
-├── index.html
-├── types.ts
-├── metadata.json
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-├── .gitignore
-│
-└── README.md
-```
-
----
-
-## ⚙️ Installation & Setup
-
-### 1. Clone the Repository
+### Setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-```
-
-### 2. Navigate to the Project Folder
-
-```bash
-cd YOUR_REPOSITORY
-```
-
-### 3. Install Dependencies
-
-```bash
+git clone https://github.com/harshith29122004-lgtm/harshith-ds.git
+cd harshith-ds
 npm install
-```
-
-### 4. Start the Development Server
-
-```bash
 npm run dev
 ```
 
-### 5. Open in Browser
+Open the local development URL printed by Vite in your terminal.
 
-Open the local development URL displayed in your terminal.
+## Configuration
 
----
+The application source references an API key through `process.env.API_KEY`. Configure the required Google GenAI key using the environment/configuration approach expected by this project's Vite setup. **Do not commit API keys or other secrets** to the repository.
 
-## 🚀 Project Applications
+## Build
 
-* Tourism information assistance.
-* Discovering Karnataka's famous destinations.
-* Interactive travel information.
-* Exploring Karnataka's cultural and historical attractions.
+```bash
+npm run build
+```
 
----
+## Repository
 
-## 👨‍💻 Developed By
-
-**Harshith D S**
-
-Information Science Engineering Graduate
-
-📧 Email: [harshith29122004@gmail.com](mailto:harshith29122004@gmail.com)
-
-🔗 LinkedIn: https://www.linkedin.com/in/harshith-ds-7a786030b
+[View the source code](https://github.com/harshith29122004-lgtm/harshith-ds)
 
 ---
-
-<p align="center">
-  ⭐ If you find this project interesting, don't forget to give it a star!
-</p>
-
-<h3 align="center">❤️ Built with enthusiasm during my internship.</h3>
